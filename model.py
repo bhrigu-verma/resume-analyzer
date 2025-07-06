@@ -6,7 +6,7 @@ import os
 import re
 import pandas as pd
 import spacy
-import language_tool_pyth
+import language_tool_python
 import datetime
 import json
 import subprocess
