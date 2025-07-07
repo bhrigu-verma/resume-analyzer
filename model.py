@@ -326,74 +326,41 @@ def match_resume_to_job_description(resume_text, job_description):
         "Job_Match_Score": match_score,
     }
 
+import os
+import json
+import spacy # type: ignore
+from typing import List
 
 def load_job_skills(file_path: str) -> List[str]:
     """Load general job skills from a JSON file or use a default list."""
     default_skills = [
-        "communication",
-        "teamwork",
-        "leadership",
-        "problem-solving",
-        "time management",
-        "analytical skills",
-        "creativity",
-        "adaptability",
-        "programming",
-        "data analysis",
-        "project management",
-        "software development",
-        "database management",
-        "web development",
-        "Python",
-        "Java",
-        "Machine Learning",
-        "Deep Learning",
-        "NLP",
-        "SQL",
-        "C++",
-        "JavaScript",
-        "Data Science",
-        "TensorFlow",
-        "PyTorch",
-        "Linux",
-        "Docker",
-        "Kubernetes",
-        "Git",
-        "REST API",
-        "Flask",
-        "Django",
-        "BERT",
-        "Transformers",
-        "Siamese",
-        "Neural Networks",
+        "communication", "teamwork", "leadership", "problem-solving",
+        "time management", "analytical skills", "creativity", "adaptability",
+        "programming", "data analysis", "project management",
+        "software development", "database management", "web development",
+        "Python", "Java", "Machine Learning", "Deep Learning", "NLP", "SQL",
+        "C++", "JavaScript", "Data Science", "TensorFlow", "PyTorch", "Linux",
+        "Docker", "Kubernetes", "Git", "REST API", "Flask", "Django", "BERT",
+        "Transformers", "Siamese", "Neural Networks",
     ]
 
-    try:
-        if os.path.exists(file_path):
+    if os.path.exists(file_path):
+        try:
             with open(file_path, "r") as file:
                 skills_data = json.load(file)
             if isinstance(skills_data, list):
                 return skills_data
-            elif isinstance(skills_data, dict) and "skills" in skills_data:
+            if isinstance(skills_data, dict) and "skills" in skills_data:
                 return skills_data["skills"]
-            else:
-                print(f"Unexpected format in '{file_path}'. Using default skills list.")
-                return default_skills
-        else:
-            print(f"'{file_path}' not found. Using default skills list.")
-            return default_skills
-    except json.JSONDecodeError:
-        print(f"Error reading '{file_path}'. Using default skills list.")
-        return default_skills
+            print(f"Unexpected format in '{file_path}'. Using default skills list.")
+        except json.JSONDecodeError:
+            print(f"Error decoding '{file_path}'. Using default skills list.")
+    else:
+        print(f"'{file_path}' not found. Using default skills list.")
+    return default_skills
 
-
-# Load spaCy NLP model
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
-    nlp = spacy.load("en_core_web_sm")
-
+# Load spaCy NLP model (assumes en_core_web_sm is installed via requirements.txt)
+nlp = spacy.load("en_core_web_sm")
 
 def extract_skills(text: str) -> List[str]:
     """Extract skills from text using NLP techniques."""
